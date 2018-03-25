@@ -1,0 +1,21 @@
+[package]
+name = "ddc-winapi"
+version = "0.1.0"
+authors = ["arcnmx"]
+
+description = "DDC/CI monitor control on Windows"
+keywords = ["ddc", "mccs", "vcp", "vesa"]
+
+documentation = "http://arcnmx.github.io/ddc-winapi-rs/ddc_winapi"
+repository = "https://github.com/arcnmx/ddc-winapi-rs"
+readme = "README.md"
+license = "MIT"
+
+[badges]
+travis-ci = { repository = "arcnmx/ddc-winapi-rs" }
+maintenance = { status = "passively-maintained" }
+
+[dependencies]
+ddc = { version = "^0.1.0", git = "https://github.com/arcnmx/ddc-rs.git" }
+winapi = { version = "^0.3.4", features = ["winuser"] }
+widestring = "^0.3.0"
