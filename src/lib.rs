@@ -6,6 +6,9 @@
 //! # Example
 //!
 //! ```rust,no_run
+//! extern crate ddc;
+//!
+//! # fn main() {
 //! use ddc::Ddc;
 //! use ddc_winapi::Monitor;
 //!
@@ -13,6 +16,7 @@
 //!     let mccs_version = ddc.get_vcp_feature(0xdf).unwrap();
 //!     println!("MCCS version: {:04x}", mccs_version.maximum());
 //! }
+//! # }
 //! ```
 
 #[macro_use]
