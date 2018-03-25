@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["enumerate_monitors","Enumerates all `HMONITOR`s using the `EnumDisplayMonitors` WinAPI call."],["get_physical_monitors_from_hmonitor","WinAPI `GetPhysicalMonitorsFromHMONITOR`"]],"struct":[["Monitor","A handle to an attached monitor that allows the use of DDC/CI operations."]]});

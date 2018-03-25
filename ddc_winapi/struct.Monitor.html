@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Monitor` struct in crate `ddc_winapi`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Monitor">
+
+    <title>ddc_winapi::Monitor - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc struct">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
+        
+        <p class='location'>Struct Monitor</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.new">new</a><a href="#method.enumerate">enumerate</a><a href="#method.description">description</a><a href="#method.handle">handle</a><a href="#method.winapi_get_timing_report">winapi_get_timing_report</a><a href="#method.winapi_set_vcp_feature">winapi_set_vcp_feature</a><a href="#method.winapi_save_current_settings">winapi_save_current_settings</a><a href="#method.winapi_get_vcp_feature_and_vcp_feature_reply">winapi_get_vcp_feature_and_vcp_feature_reply</a><a href="#method.winapi_get_capabilities_string_length">winapi_get_capabilities_string_length</a><a href="#method.winapi_capabilities_request_and_capabilities_reply">winapi_capabilities_request_and_capabilities_reply</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-DdcHost">DdcHost</a><a href="#impl-Ddc">Ddc</a><a href="#impl-Drop">Drop</a><a href="#impl-Debug">Debug</a></div></div><p class='location'><a href='index.html'>ddc_winapi</a></p><script>window.sidebarCurrent = {name: 'Monitor', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>ddc_winapi</a>::<wbr><a class="struct" href=''>Monitor</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../src/ddc_winapi/lib.rs.html#45-47' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct Monitor { /* fields omitted */ }</pre><div class='docblock'><p>A handle to an attached monitor that allows the use of DDC/CI operations.</p>
+</div>
+                    <h2 id='methods' class='small-section-header'>
+                      Methods<a href='#methods' class='anchor'></a>
+                    </h2>
+                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../ddc_winapi/struct.Monitor.html" title="struct ddc_winapi::Monitor">Monitor</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/ddc_winapi/lib.rs.html#49-157' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>pub unsafe fn <a href='#method.new' class='fnname'>new</a>(monitor: PHYSICAL_MONITOR) -&gt; Self</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/ddc_winapi/lib.rs.html#51-55' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Create a new monitor from the specified handle.</p>
+</div><h4 id='method.enumerate' class="method"><span id='enumerate.v' class='invisible'><code>pub fn <a href='#method.enumerate' class='fnname'>enumerate</a>() -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;Self&gt;&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/ddc_winapi/lib.rs.html#58-66' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Enumerate all connected physical monitors.</p>
+</div><h4 id='method.description' class="method"><span id='description.v' class='invisible'><code>pub fn <a href='#method.description' class='fnname'>description</a>(&amp;self) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/ddc_winapi/lib.rs.html#69-74' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Physical monitor description string.</p>
+</div><h4 id='method.handle' class="method"><span id='handle.v' class='invisible'><code>pub fn <a href='#method.handle' class='fnname'>handle</a>(&amp;self) -&gt; HANDLE</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/ddc_winapi/lib.rs.html#77-79' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Physical monitor winapi handle.</p>
+</div><h4 id='method.winapi_get_timing_report' class="method"><span id='winapi_get_timing_report.v' class='invisible'><code>pub fn <a href='#method.winapi_get_timing_report' class='fnname'>winapi_get_timing_report</a>(&amp;self) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;MC_TIMING_REPORT&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/ddc_winapi/lib.rs.html#82-91' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Retrieves a monitor&#39;s horizontal and vertical synchronization frequencies.</p>
+</div><h4 id='method.winapi_set_vcp_feature' class="method"><span id='winapi_set_vcp_feature.v' class='invisible'><code>pub fn <a href='#method.winapi_set_vcp_feature' class='fnname'>winapi_set_vcp_feature</a>(&amp;self, code: BYTE, value: DWORD) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/ddc_winapi/lib.rs.html#94-102' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Sets the value of a Virtual Control Panel (VCP) code for a monitor.</p>
+</div><h4 id='method.winapi_save_current_settings' class="method"><span id='winapi_save_current_settings.v' class='invisible'><code>pub fn <a href='#method.winapi_save_current_settings' class='fnname'>winapi_save_current_settings</a>(&amp;self) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/ddc_winapi/lib.rs.html#105-113' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Saves the current monitor settings to the display&#39;s nonvolatile storage.</p>
+</div><h4 id='method.winapi_get_vcp_feature_and_vcp_feature_reply' class="method"><span id='winapi_get_vcp_feature_and_vcp_feature_reply.v' class='invisible'><code>pub fn <a href='#method.winapi_get_vcp_feature_and_vcp_feature_reply' class='fnname'>winapi_get_vcp_feature_and_vcp_feature_reply</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;self, <br>&nbsp;&nbsp;&nbsp;&nbsp;code: BYTE<br>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">(</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>, DWORD, DWORD<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">)</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/ddc_winapi/lib.rs.html#119-130' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Retrieves the current value, maximum value, and code type of a Virtual
+Control Panel (VCP) code for a monitor.</p>
+
+<p>Returns <code>(vcp_type, current_value, max_value)</code></p>
+</div><h4 id='method.winapi_get_capabilities_string_length' class="method"><span id='winapi_get_capabilities_string_length.v' class='invisible'><code>pub fn <a href='#method.winapi_get_capabilities_string_length' class='fnname'>winapi_get_capabilities_string_length</a>(&amp;self) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;DWORD&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/ddc_winapi/lib.rs.html#134-143' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Retrieves the length of the buffer to pass to
+<code>winapi_capabilities_request_and_capabilities_reply</code>.</p>
+</div><h4 id='method.winapi_capabilities_request_and_capabilities_reply' class="method"><span id='winapi_capabilities_request_and_capabilities_reply.v' class='invisible'><code>pub fn <a href='#method.winapi_capabilities_request_and_capabilities_reply' class='fnname'>winapi_capabilities_request_and_capabilities_reply</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;self, <br>&nbsp;&nbsp;&nbsp;&nbsp;string: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;mut [</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a><br>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/ddc_winapi/lib.rs.html#148-156' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Retrieves a string describing a monitor&#39;s capabilities.</p>
+
+<p>This string is always ASCII and includes a terminating null character.</p>
+</div></div>
+            <h2 id='implementations' class='small-section-header'>
+              Trait Implementations<a href='#implementations' class='anchor'></a>
+            </h2>
+        <h3 id='impl-DdcHost' class='impl'><span class='in-band'><code>impl <a class="trait" href="http://arcnmx.github.io/ddc-rs/ddc/trait.DdcHost.html" title="trait ddc::DdcHost">DdcHost</a> for <a class="struct" href="../ddc_winapi/struct.Monitor.html" title="struct ddc_winapi::Monitor">Monitor</a></code><a href='#impl-DdcHost' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/ddc_winapi/lib.rs.html#159-161' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='associatedtype.Error' class="type"><span id='Error.t' class='invisible'><code>type <a href='http://arcnmx.github.io/ddc-rs/ddc/trait.DdcHost.html#associatedtype.Error' class="type">Error</a> = <a class="struct" href="https://doc.rust-lang.org/nightly/std/io/error/struct.Error.html" title="struct std::io::error::Error">Error</a></code></span></h4>
+<div class='docblock'><p>An error that can occur when communicating with a DDC device. <a href="http://arcnmx.github.io/ddc-rs/ddc/trait.DdcHost.html#associatedtype.Error">Read more</a></p>
+</div><h4 id='method.sleep' class="method"><span id='sleep.v' class='invisible'><code>fn <a href='http://arcnmx.github.io/ddc-rs/ddc/trait.DdcHost.html#method.sleep' class='fnname'>sleep</a>(&amp;mut self)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='http://arcnmx.github.io/ddc-rs/src/ddc/lib.rs.html#71' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Wait for any previous commands to complete. <a href="http://arcnmx.github.io/ddc-rs/ddc/trait.DdcHost.html#method.sleep">Read more</a></p>
+</div></div><h3 id='impl-Ddc' class='impl'><span class='in-band'><code>impl <a class="trait" href="http://arcnmx.github.io/ddc-rs/ddc/trait.Ddc.html" title="trait ddc::Ddc">Ddc</a> for <a class="struct" href="../ddc_winapi/struct.Monitor.html" title="struct ddc_winapi::Monitor">Monitor</a></code><a href='#impl-Ddc' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/ddc_winapi/lib.rs.html#163-207' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.capabilities_string' class="method"><span id='capabilities_string.v' class='invisible'><code>fn <a href='http://arcnmx.github.io/ddc-rs/ddc/trait.Ddc.html#tymethod.capabilities_string' class='fnname'>capabilities_string</a>(&amp;mut self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>&gt;, Self::<a class="type" href="http://arcnmx.github.io/ddc-rs/ddc/trait.DdcHost.html#associatedtype.Error" title="type ddc::DdcHost::Error">Error</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/ddc_winapi/lib.rs.html#164-174' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Retrieve the capability string from the device. <a href="http://arcnmx.github.io/ddc-rs/ddc/trait.Ddc.html#tymethod.capabilities_string">Read more</a></p>
+</div><h4 id='method.get_vcp_feature' class="method"><span id='get_vcp_feature.v' class='invisible'><code>fn <a href='http://arcnmx.github.io/ddc-rs/ddc/trait.Ddc.html#tymethod.get_vcp_feature' class='fnname'>get_vcp_feature</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;mut self, <br>&nbsp;&nbsp;&nbsp;&nbsp;code: <a class="type" href="http://arcnmx.github.io/mccs-rs/mccs/type.FeatureCode.html" title="type mccs::FeatureCode">FeatureCode</a><br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="http://arcnmx.github.io/mccs-rs/mccs/struct.Value.html" title="struct mccs::Value">VcpValue</a>, Self::<a class="type" href="http://arcnmx.github.io/ddc-rs/ddc/trait.DdcHost.html#associatedtype.Error" title="type ddc::DdcHost::Error">Error</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/ddc_winapi/lib.rs.html#176-189' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Gets the current value of an MCCS VCP feature.</p>
+</div><h4 id='method.set_vcp_feature' class="method"><span id='set_vcp_feature.v' class='invisible'><code>fn <a href='http://arcnmx.github.io/ddc-rs/ddc/trait.Ddc.html#tymethod.set_vcp_feature' class='fnname'>set_vcp_feature</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;mut self, <br>&nbsp;&nbsp;&nbsp;&nbsp;code: <a class="type" href="http://arcnmx.github.io/mccs-rs/mccs/type.FeatureCode.html" title="type mccs::FeatureCode">FeatureCode</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;value: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u16.html">u16</a><br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>, Self::<a class="type" href="http://arcnmx.github.io/ddc-rs/ddc/trait.DdcHost.html#associatedtype.Error" title="type ddc::DdcHost::Error">Error</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/ddc_winapi/lib.rs.html#191-193' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Sets a VCP feature to the specified value.</p>
+</div><h4 id='method.save_current_settings' class="method"><span id='save_current_settings.v' class='invisible'><code>fn <a href='http://arcnmx.github.io/ddc-rs/ddc/trait.Ddc.html#tymethod.save_current_settings' class='fnname'>save_current_settings</a>(&amp;mut self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>, Self::<a class="type" href="http://arcnmx.github.io/ddc-rs/ddc/trait.DdcHost.html#associatedtype.Error" title="type ddc::DdcHost::Error">Error</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/ddc_winapi/lib.rs.html#195-197' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Instructs the device to save its current settings.</p>
+</div><h4 id='method.get_timing_report' class="method"><span id='get_timing_report.v' class='invisible'><code>fn <a href='http://arcnmx.github.io/ddc-rs/ddc/trait.Ddc.html#tymethod.get_timing_report' class='fnname'>get_timing_report</a>(&amp;mut self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="http://arcnmx.github.io/ddc-rs/ddc/commands/struct.TimingMessage.html" title="struct ddc::commands::TimingMessage">TimingMessage</a>, Self::<a class="type" href="http://arcnmx.github.io/ddc-rs/ddc/trait.DdcHost.html#associatedtype.Error" title="type ddc::DdcHost::Error">Error</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/ddc_winapi/lib.rs.html#199-206' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Retrieves a timing report from the device.</p>
+</div></div><h3 id='impl-Drop' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/drop/trait.Drop.html" title="trait core::ops::drop::Drop">Drop</a> for <a class="struct" href="../ddc_winapi/struct.Monitor.html" title="struct ddc_winapi::Monitor">Monitor</a></code><a href='#impl-Drop' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/ddc_winapi/lib.rs.html#209-215' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.drop' class="method"><span id='drop.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/ops/drop/trait.Drop.html#tymethod.drop' class='fnname'>drop</a>(&amp;mut self)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/ddc_winapi/lib.rs.html#210-214' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Executes the destructor for this type. <a href="https://doc.rust-lang.org/nightly/core/ops/drop/trait.Drop.html#tymethod.drop">Read more</a></p>
+</div></div><h3 id='impl-Debug' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="struct" href="../ddc_winapi/struct.Monitor.html" title="struct ddc_winapi::Monitor">Monitor</a></code><a href='#impl-Debug' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/ddc_winapi/lib.rs.html#217-224' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class="method"><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, f: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html" title="struct core::fmt::Formatter">Formatter</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html" title="type core::fmt::Result">Result</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/ddc_winapi/lib.rs.html#218-223' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Formats the value using the given formatter. <a href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt">Read more</a></p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>↑</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>↓</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>↹</dt>
+                    <dd>Switch tab</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt style="width:31px;">+ / -</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "ddc_winapi";
+    </script>
+    <script src="../main.js"></script>
+    <script defer src="../search-index.js"></script>
+</body>
+</html>
