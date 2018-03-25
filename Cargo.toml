@@ -16,6 +16,6 @@ travis-ci = { repository = "arcnmx/ddc-winapi-rs" }
 maintenance = { status = "passively-maintained" }
 
 [dependencies]
-ddc = { version = "^0.1.0", git = "https://github.com/arcnmx/ddc-rs.git" }
+ddc = { version = "^0.1.0" }
 winapi = { version = "^0.3.4", features = ["winuser"] }
 widestring = "^0.3.0"
