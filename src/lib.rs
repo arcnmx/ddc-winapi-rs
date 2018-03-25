@@ -223,6 +223,7 @@ impl fmt::Debug for Monitor {
     }
 }
 
+/// WinAPI `GetPhysicalMonitorsFromHMONITOR`
 pub fn get_physical_monitors_from_hmonitor(monitor: HMONITOR) -> io::Result<Vec<PHYSICAL_MONITOR>> {
     unsafe {
         let mut len = 0;
@@ -239,6 +240,7 @@ pub fn get_physical_monitors_from_hmonitor(monitor: HMONITOR) -> io::Result<Vec<
     }
 }
 
+/// Enumerates all `HMONITOR`s using the `EnumDisplayMonitors` WinAPI call.
 pub fn enumerate_monitors() -> io::Result<Vec<HMONITOR>> {
     unsafe extern "system" fn callback(monitor: HMONITOR, _hdc_monitor: HDC, _lprc: LPRECT, userdata: LPARAM) -> BOOL {
         let monitors: &mut Vec<HMONITOR> = mem::transmute(userdata);
