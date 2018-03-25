@@ -4,6 +4,11 @@ rust:
 sudo: false
 os:
 - linux
+addons:
+  apt:
+    packages:
+    - gcc-mingw-w64-i686
+    - gcc-mingw-w64-x86-64
 cache:
   directories:
   - "$HOME/.cargo"
