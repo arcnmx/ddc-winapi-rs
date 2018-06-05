@@ -19,25 +19,18 @@
 //! # }
 //! ```
 
-#[macro_use]
 extern crate winapi;
 extern crate ddc;
 extern crate widestring;
 
 use std::{io, ptr, mem, fmt};
+use winapi::um::physicalmonitorenumerationapi::*;
+use winapi::um::lowlevelmonitorconfigurationapi::*;
 use winapi::shared::windef::{HMONITOR, HDC, LPRECT};
 use winapi::shared::minwindef::{LPARAM, BYTE, DWORD, BOOL, TRUE};
 use winapi::um::winnt::HANDLE;
 use widestring::WideCString;
 use ddc::{Ddc, DdcHost, FeatureCode, VcpValue, TimingMessage};
-
-// TODO: upstream this: https://github.com/retep998/winapi-rs/issues/503
-#[path = "winapi/physicalmonitorenumerationapi.rs"]
-mod physicalmonitorenumerationapi;
-use physicalmonitorenumerationapi::*;
-#[path = "winapi/lowlevelmonitorconfigurationapi.rs"]
-mod lowlevelmonitorconfigurationapi;
-use lowlevelmonitorconfigurationapi::*;
 
 // TODO: good luck getting EDID: https://social.msdn.microsoft.com/Forums/vstudio/en-US/efc46c70-7479-4d59-822b-600cb4852c4b/how-to-locate-the-edid-data-folderkey-in-the-registry-which-belongs-to-a-specific-physicalmonitor?forum=wdk
 
