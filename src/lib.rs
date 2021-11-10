@@ -66,10 +66,8 @@ impl Monitor {
 
     /// Physical monitor description string.
     pub fn description(&self) -> String {
-        unsafe {
-            WideCString::from_ptr_str(self.monitor.szPhysicalMonitorDescription.as_ptr())
-                .to_string_lossy()
-        }
+        let str_ptr = ptr::addr_of!(self.monitor.szPhysicalMonitorDescription);
+        unsafe { WideCString::from_ptr_str(str_ptr as _).to_string_lossy() }
     }
 
     /// Physical monitor winapi handle.
