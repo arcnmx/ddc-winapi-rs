@@ -19,14 +19,20 @@
 
 use {
     ddc::{Ddc, DdcHost, FeatureCode, TimingMessage, VcpValue},
-    std::{borrow::Cow, fmt, io, mem, ptr},
+    std::{borrow::Cow, fmt, mem, ptr},
     widestring::{WideCStr, WideStr},
-    winapi::{
-        shared::{
-            minwindef::{BOOL, BYTE, DWORD, LPARAM, TRUE},
-            windef::{HDC, HMONITOR, LPRECT},
+    windows::{
+        core::{Error as WinError, Result as WinResult},
+        Win32::{
+            Devices::Display::{
+                CapabilitiesRequestAndCapabilitiesReply, DestroyPhysicalMonitor, GetCapabilitiesStringLength,
+                GetNumberOfPhysicalMonitorsFromHMONITOR, GetPhysicalMonitorsFromHMONITOR, GetTimingReport,
+                GetVCPFeatureAndVCPFeatureReply, SaveCurrentSettings, SetVCPFeature, MC_MOMENTARY, MC_SET_PARAMETER,
+                MC_TIMING_REPORT, MC_VCP_CODE_TYPE, PHYSICAL_MONITOR,
+            },
+            Foundation::{BOOL, HANDLE, LPARAM, RECT},
+            Graphics::Gdi::{EnumDisplayMonitors, HDC, HMONITOR},
         },
-        um::{lowlevelmonitorconfigurationapi::*, physicalmonitorenumerationapi::*, winnt::HANDLE},
     },
 };
 
@@ -44,7 +50,7 @@ impl Monitor {
     }
 
     /// Enumerate all connected physical monitors.
-    pub fn enumerate() -> io::Result<Vec<Self>> {
+    pub fn enumerate() -> WinResult<Vec<Self>> {
         enumerate_monitors()
             .and_then(|mon| {
                 mon.into_iter()
@@ -52,7 +58,7 @@ impl Monitor {
                         get_physical_monitors_from_hmonitor(mon)
                             .map(|mon| mon.into_iter().map(|mon| unsafe { Monitor::new(mon) }))
                     })
-                    .collect::<io::Result<Vec<_>>>()
+                    .collect::<WinResult<Vec<_>>>()
             })
             .map(|v| v.into_iter().flatten().collect())
     }
@@ -77,90 +83,58 @@ impl Monitor {
     }
 
     /// Retrieves a monitor's horizontal and vertical synchronization frequencies.
-    pub fn winapi_get_timing_report(&self) -> io::Result<MC_TIMING_REPORT> {
-        unsafe {
-            let mut report = mem::zeroed();
-            if GetTimingReport(self.handle(), &mut report) != TRUE {
-                Err(io::Error::last_os_error())
-            } else {
-                Ok(report)
-            }
-        }
+    pub fn winapi_get_timing_report(&self) -> WinResult<MC_TIMING_REPORT> {
+        let mut report = Default::default();
+        BOOL(unsafe { GetTimingReport(self.handle(), &mut report) }).ok()?;
+        Ok(report)
     }
 
     /// Sets the value of a Virtual Control Panel (VCP) code for a monitor.
-    pub fn winapi_set_vcp_feature(&self, code: BYTE, value: DWORD) -> io::Result<()> {
-        unsafe {
-            if SetVCPFeature(self.handle(), code, value) != TRUE {
-                Err(io::Error::last_os_error())
-            } else {
-                Ok(())
-            }
-        }
+    pub fn winapi_set_vcp_feature(&self, code: u8, value: u32) -> WinResult<()> {
+        BOOL(unsafe { SetVCPFeature(self.handle(), code, value) }).ok()?;
+        Ok(())
     }
 
     /// Saves the current monitor settings to the display's nonvolatile storage.
-    pub fn winapi_save_current_settings(&self) -> io::Result<()> {
-        unsafe {
-            if SaveCurrentSettings(self.handle()) != TRUE {
-                Err(io::Error::last_os_error())
-            } else {
-                Ok(())
-            }
-        }
+    pub fn winapi_save_current_settings(&self) -> WinResult<()> {
+        BOOL(unsafe { SaveCurrentSettings(self.handle()) }).ok()?;
+        Ok(())
     }
 
     /// Retrieves the current value, maximum value, and code type of a Virtual
     /// Control Panel (VCP) code for a monitor.
     ///
     /// Returns `(vcp_type, current_value, max_value)`
-    pub fn winapi_get_vcp_feature_and_vcp_feature_reply(
-        &self,
-        code: BYTE,
-    ) -> io::Result<(MC_VCP_CODE_TYPE, DWORD, DWORD)> {
-        unsafe {
-            let mut ty = 0;
-            let mut current = 0;
-            let mut max = 0;
-            if GetVCPFeatureAndVCPFeatureReply(self.handle(), code, &mut ty, &mut current, &mut max) != TRUE {
-                Err(io::Error::last_os_error())
-            } else {
-                Ok((ty, current, max))
-            }
-        }
+    pub fn winapi_get_vcp_feature_and_vcp_feature_reply(&self, code: u8) -> WinResult<(MC_VCP_CODE_TYPE, u32, u32)> {
+        let mut ty = MC_VCP_CODE_TYPE::default();
+        let mut current = 0;
+        let mut max = 0;
+        BOOL(unsafe {
+            GetVCPFeatureAndVCPFeatureReply(self.handle(), code, Some(&mut ty), &mut current, Some(&mut max))
+        })
+        .ok()?;
+        Ok((ty, current, max))
     }
 
     /// Retrieves the length of the buffer to pass to
     /// `winapi_capabilities_request_and_capabilities_reply`.
-    pub fn winapi_get_capabilities_string_length(&self) -> io::Result<DWORD> {
-        unsafe {
-            let mut len = 0;
-            if GetCapabilitiesStringLength(self.handle(), &mut len) != TRUE {
-                Err(io::Error::last_os_error())
-            } else {
-                Ok(len)
-            }
-        }
+    pub fn winapi_get_capabilities_string_length(&self) -> WinResult<u32> {
+        let mut len = 0;
+        BOOL(unsafe { GetCapabilitiesStringLength(self.handle(), &mut len) }).ok()?;
+        Ok(len)
     }
 
     /// Retrieves a string describing a monitor's capabilities.
     ///
     /// This string is always ASCII and includes a terminating null character.
-    pub fn winapi_capabilities_request_and_capabilities_reply(&self, string: &mut [u8]) -> io::Result<()> {
-        unsafe {
-            if CapabilitiesRequestAndCapabilitiesReply(self.handle(), string.as_mut_ptr() as *mut _, string.len() as _)
-                != TRUE
-            {
-                Err(io::Error::last_os_error())
-            } else {
-                Ok(())
-            }
-        }
+    pub fn winapi_capabilities_request_and_capabilities_reply(&self, string: &mut [u8]) -> WinResult<()> {
+        BOOL(unsafe { CapabilitiesRequestAndCapabilitiesReply(self.handle(), string) }).ok()?;
+        Ok(())
     }
 }
 
 impl DdcHost for Monitor {
-    type Error = io::Error;
+    type Error = WinError;
 }
 
 impl Ddc for Monitor {
@@ -210,9 +184,7 @@ impl Ddc for Monitor {
 
 impl Drop for Monitor {
     fn drop(&mut self) {
-        unsafe {
-            DestroyPhysicalMonitor(self.handle());
-        }
+        let _ = unsafe { DestroyPhysicalMonitor(self.handle()) };
     }
 }
 
@@ -226,38 +198,31 @@ impl fmt::Debug for Monitor {
 }
 
 /// WinAPI `GetPhysicalMonitorsFromHMONITOR`
-pub fn get_physical_monitors_from_hmonitor(monitor: HMONITOR) -> io::Result<Vec<PHYSICAL_MONITOR>> {
-    unsafe {
-        let mut len = 0;
-        if GetNumberOfPhysicalMonitorsFromHMONITOR(monitor, &mut len) != TRUE {
-            return Err(io::Error::last_os_error())
-        }
+pub fn get_physical_monitors_from_hmonitor(monitor: HMONITOR) -> WinResult<Vec<PHYSICAL_MONITOR>> {
+    let mut len = 0;
+    BOOL(unsafe { GetNumberOfPhysicalMonitorsFromHMONITOR(monitor, &mut len) }).ok()?;
 
-        let mut monitors = vec![mem::zeroed::<PHYSICAL_MONITOR>(); len as usize];
-        if GetPhysicalMonitorsFromHMONITOR(monitor, len, monitors.as_mut_ptr()) != TRUE {
-            Err(io::Error::last_os_error())
-        } else {
-            Ok(monitors)
-        }
-    }
+    let mut monitors = vec![PHYSICAL_MONITOR::default(); len as usize];
+    BOOL(unsafe { GetPhysicalMonitorsFromHMONITOR(monitor, &mut monitors) }).ok()?;
+
+    Ok(monitors)
 }
 
 /// Enumerates all `HMONITOR`s using the `EnumDisplayMonitors` WinAPI call.
-pub fn enumerate_monitors() -> io::Result<Vec<HMONITOR>> {
-    unsafe extern "system" fn callback(monitor: HMONITOR, _hdc_monitor: HDC, _lprc: LPRECT, userdata: LPARAM) -> BOOL {
+pub fn enumerate_monitors() -> WinResult<Vec<HMONITOR>> {
+    unsafe extern "system" fn callback(
+        monitor: HMONITOR,
+        _hdc_monitor: HDC,
+        _lprc: *mut RECT,
+        userdata: LPARAM,
+    ) -> BOOL {
         let monitors: &mut Vec<HMONITOR> = mem::transmute(userdata);
         monitors.push(monitor);
-        TRUE
+        BOOL::from(true)
     }
 
     let mut monitors = Vec::<HMONITOR>::new();
-    if unsafe {
-        let userdata = &mut monitors as *mut _;
-        winapi::um::winuser::EnumDisplayMonitors(ptr::null_mut(), ptr::null(), Some(callback), userdata as _)
-    } != TRUE
-    {
-        Err(io::Error::last_os_error())
-    } else {
-        Ok(monitors)
-    }
+    let userdata = LPARAM(&mut monitors as *mut _ as _);
+    unsafe { EnumDisplayMonitors(None, None, Some(callback), userdata) }.ok()?;
+    Ok(monitors)
 }

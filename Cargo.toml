@@ -34,6 +34,6 @@ maintenance = { status = "passively-maintained" }
 ddc = { version = "0.3", git = "https://github.com/arcnmx/ddc-rs", branch = "v0.3.x" }
 widestring = "1"
 
-[dependencies.winapi]
-version = "0.3"
-features = ["windef", "minwindef", "winuser", "physicalmonitorenumerationapi", "lowlevelmonitorconfigurationapi"]
+[dependencies.windows]
+version = "0.43"
+features = ["Win32_Devices_Display", "Win32_Foundation", "Win32_Graphics_Gdi"]
