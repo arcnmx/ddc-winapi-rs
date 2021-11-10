@@ -2,7 +2,7 @@
 name = "ddc-winapi"
 version = "0.3.0"
 authors = ["arcnmx"]
-edition = "2018"
+edition = "2021"
 
 description = "DDC/CI monitor control on Windows"
 keywords = ["ddc", "mccs", "vcp", "vesa"]
@@ -19,4 +19,4 @@ maintenance = { status = "passively-maintained" }
 [dependencies]
 ddc = { version = "^0.2.0" }
 winapi = { version = "^0.3.5", features = ["windef", "minwindef", "winuser", "physicalmonitorenumerationapi", "lowlevelmonitorconfigurationapi"] }
-widestring = "^0.3.0"
+widestring = "^0.4.0"

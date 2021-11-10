@@ -19,18 +19,14 @@
 //! # }
 //! ```
 
-extern crate winapi;
-extern crate ddc;
-extern crate widestring;
-
-use std::{io, ptr, mem, fmt};
-use winapi::um::physicalmonitorenumerationapi::*;
-use winapi::um::lowlevelmonitorconfigurationapi::*;
-use winapi::shared::windef::{HMONITOR, HDC, LPRECT};
-use winapi::shared::minwindef::{LPARAM, BYTE, DWORD, BOOL, TRUE};
-use winapi::um::winnt::HANDLE;
+use ddc::{Ddc, DdcHost, FeatureCode, TimingMessage, VcpValue};
+use std::{fmt, io, mem, ptr};
 use widestring::WideCString;
-use ddc::{Ddc, DdcHost, FeatureCode, VcpValue, TimingMessage};
+use winapi::shared::minwindef::{BOOL, BYTE, DWORD, LPARAM, TRUE};
+use winapi::shared::windef::{HDC, HMONITOR, LPRECT};
+use winapi::um::lowlevelmonitorconfigurationapi::*;
+use winapi::um::physicalmonitorenumerationapi::*;
+use winapi::um::winnt::HANDLE;
 
 // TODO: good luck getting EDID: https://social.msdn.microsoft.com/Forums/vstudio/en-US/efc46c70-7479-4d59-822b-600cb4852c4b/how-to-locate-the-edid-data-folderkey-in-the-registry-which-belongs-to-a-specific-physicalmonitor?forum=wdk
 
@@ -42,20 +38,21 @@ pub struct Monitor {
 impl Monitor {
     /// Create a new monitor from the specified handle.
     pub unsafe fn new(monitor: PHYSICAL_MONITOR) -> Self {
-        Monitor {
-            monitor: monitor,
-        }
+        Monitor { monitor }
     }
 
     /// Enumerate all connected physical monitors.
     pub fn enumerate() -> io::Result<Vec<Self>> {
-        enumerate_monitors().and_then(|mon|
-            mon.into_iter().map(|mon|
-                get_physical_monitors_from_hmonitor(mon).map(|mon|
-                    mon.into_iter().map(|mon| unsafe { Monitor::new(mon) })
-                )
-            ).collect::<io::Result<Vec<_>>>()
-        ).map(|v| v.into_iter().flat_map(|mon| mon).collect())
+        enumerate_monitors()
+            .and_then(|mon| {
+                mon.into_iter()
+                    .map(|mon| {
+                        get_physical_monitors_from_hmonitor(mon)
+                            .map(|mon| mon.into_iter().map(|mon| unsafe { Monitor::new(mon) }))
+                    })
+                    .collect::<io::Result<Vec<_>>>()
+            })
+            .map(|v| v.into_iter().flat_map(|mon| mon).collect())
     }
 
     /// Physical monitor description string.
@@ -109,12 +106,17 @@ impl Monitor {
     /// Control Panel (VCP) code for a monitor.
     ///
     /// Returns `(vcp_type, current_value, max_value)`
-    pub fn winapi_get_vcp_feature_and_vcp_feature_reply(&self, code: BYTE) -> io::Result<(MC_VCP_CODE_TYPE, DWORD, DWORD)> {
+    pub fn winapi_get_vcp_feature_and_vcp_feature_reply(
+        &self,
+        code: BYTE,
+    ) -> io::Result<(MC_VCP_CODE_TYPE, DWORD, DWORD)> {
         unsafe {
             let mut ty = 0;
             let mut current = 0;
             let mut max = 0;
-            if GetVCPFeatureAndVCPFeatureReply(self.handle(), code, &mut ty, &mut current, &mut max) != TRUE {
+            if GetVCPFeatureAndVCPFeatureReply(self.handle(), code, &mut ty, &mut current, &mut max)
+                != TRUE
+            {
                 Err(io::Error::last_os_error())
             } else {
                 Ok((ty, current, max))
@@ -138,9 +140,17 @@ impl Monitor {
     /// Retrieves a string describing a monitor's capabilities.
     ///
     /// This string is always ASCII and includes a terminating null character.
-    pub fn winapi_capabilities_request_and_capabilities_reply(&self, string: &mut [u8]) -> io::Result<()> {
+    pub fn winapi_capabilities_request_and_capabilities_reply(
+        &self,
+        string: &mut [u8],
+    ) -> io::Result<()> {
         unsafe {
-            if CapabilitiesRequestAndCapabilitiesReply(self.handle(), string.as_mut_ptr() as *mut _, string.len() as _) != TRUE {
+            if CapabilitiesRequestAndCapabilitiesReply(
+                self.handle(),
+                string.as_mut_ptr() as *mut _,
+                string.len() as _,
+            ) != TRUE
+            {
                 Err(io::Error::last_os_error())
             } else {
                 Ok(())
@@ -190,12 +200,11 @@ impl Ddc for Monitor {
     }
 
     fn get_timing_report(&mut self) -> Result<TimingMessage, Self::Error> {
-        self.winapi_get_timing_report()
-            .map(|timing| TimingMessage {
-                timing_status: timing.bTimingStatusByte,
-                horizontal_frequency: timing.dwHorizontalFrequencyInHZ as _,
-                vertical_frequency: timing.dwVerticalFrequencyInHZ as _,
-            })
+        self.winapi_get_timing_report().map(|timing| TimingMessage {
+            timing_status: timing.bTimingStatusByte,
+            horizontal_frequency: timing.dwHorizontalFrequencyInHZ as _,
+            vertical_frequency: timing.dwVerticalFrequencyInHZ as _,
+        })
     }
 }
 
@@ -221,7 +230,7 @@ pub fn get_physical_monitors_from_hmonitor(monitor: HMONITOR) -> io::Result<Vec<
     unsafe {
         let mut len = 0;
         if GetNumberOfPhysicalMonitorsFromHMONITOR(monitor, &mut len) != TRUE {
-            return Err(io::Error::last_os_error())
+            return Err(io::Error::last_os_error());
         }
 
         let mut monitors = vec![mem::zeroed::<PHYSICAL_MONITOR>(); len as usize];
@@ -235,7 +244,12 @@ pub fn get_physical_monitors_from_hmonitor(monitor: HMONITOR) -> io::Result<Vec<
 
 /// Enumerates all `HMONITOR`s using the `EnumDisplayMonitors` WinAPI call.
 pub fn enumerate_monitors() -> io::Result<Vec<HMONITOR>> {
-    unsafe extern "system" fn callback(monitor: HMONITOR, _hdc_monitor: HDC, _lprc: LPRECT, userdata: LPARAM) -> BOOL {
+    unsafe extern "system" fn callback(
+        monitor: HMONITOR,
+        _hdc_monitor: HDC,
+        _lprc: LPRECT,
+        userdata: LPARAM,
+    ) -> BOOL {
         let monitors: &mut Vec<HMONITOR> = mem::transmute(userdata);
         monitors.push(monitor);
         TRUE
@@ -244,8 +258,14 @@ pub fn enumerate_monitors() -> io::Result<Vec<HMONITOR>> {
     let mut monitors = Vec::<HMONITOR>::new();
     if unsafe {
         let userdata = &mut monitors as *mut _;
-        winapi::um::winuser::EnumDisplayMonitors(ptr::null_mut(), ptr::null(), Some(callback), userdata as _)
-    } != TRUE {
+        winapi::um::winuser::EnumDisplayMonitors(
+            ptr::null_mut(),
+            ptr::null(),
+            Some(callback),
+            userdata as _,
+        )
+    } != TRUE
+    {
         Err(io::Error::last_os_error())
     } else {
         Ok(monitors)
