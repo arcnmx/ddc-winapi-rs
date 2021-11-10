@@ -46,6 +46,14 @@ pub struct Monitor {
 
 impl Monitor {
     /// Create a new monitor from the specified handle.
+    ///
+    /// # Safety
+    ///
+    /// The provided `monitor` must contain valid and well-constructed info:
+    ///
+    /// - `monitor.hPhysicalMonitor` must be a valid HANDLE.
+    /// - `monitor.szPhysicalMonitorDescription` must contain a null-terminated
+    ///   string.
     pub unsafe fn new(monitor: PHYSICAL_MONITOR) -> Self {
         Monitor { monitor }
     }
@@ -61,7 +69,7 @@ impl Monitor {
                     })
                     .collect::<WinResult<Vec<_>>>()
             })
-            .map(|v| v.into_iter().flat_map(|mon| mon).collect())
+            .map(|v| v.into_iter().flatten().collect())
     }
 
     /// Physical monitor description string.
