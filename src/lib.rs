@@ -17,20 +17,24 @@
 //! # }
 //! ```
 
+pub use windows::{
+    core::Error as WinError,
+    Win32::{Devices::Display::PHYSICAL_MONITOR, Foundation::HANDLE},
+};
 use {
     ddc::{Ddc, DdcHost, FeatureCode, TimingMessage, VcpValue},
     std::{borrow::Cow, fmt, mem, ptr},
     widestring::{WideCStr, WideStr},
     windows::{
-        core::{Error as WinError, Result as WinResult},
+        core::Result as WinResult,
         Win32::{
             Devices::Display::{
                 CapabilitiesRequestAndCapabilitiesReply, DestroyPhysicalMonitor, GetCapabilitiesStringLength,
                 GetNumberOfPhysicalMonitorsFromHMONITOR, GetPhysicalMonitorsFromHMONITOR, GetTimingReport,
                 GetVCPFeatureAndVCPFeatureReply, SaveCurrentSettings, SetVCPFeature, MC_MOMENTARY, MC_SET_PARAMETER,
-                MC_TIMING_REPORT, MC_VCP_CODE_TYPE, PHYSICAL_MONITOR,
+                MC_TIMING_REPORT, MC_VCP_CODE_TYPE,
             },
-            Foundation::{BOOL, HANDLE, LPARAM, RECT},
+            Foundation::{BOOL, LPARAM, RECT},
             Graphics::Gdi::{EnumDisplayMonitors, HDC, HMONITOR},
         },
     },
