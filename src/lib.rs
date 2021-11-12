@@ -23,18 +23,23 @@ use std::{fmt, mem, ptr};
 use ddc::{Ddc, DdcHost, FeatureCode, TimingMessage, VcpValue};
 use widestring::WideCString;
 use windows::{
-    runtime::{Error as WinError, Result as WinResult},
+    runtime::Result as WinResult,
     Win32::{
         Devices::Display::{
             CapabilitiesRequestAndCapabilitiesReply, DestroyPhysicalMonitor,
             GetCapabilitiesStringLength, GetNumberOfPhysicalMonitorsFromHMONITOR,
             GetPhysicalMonitorsFromHMONITOR, GetTimingReport, GetVCPFeatureAndVCPFeatureReply,
             SaveCurrentSettings, SetVCPFeature, MC_MOMENTARY, MC_SET_PARAMETER, MC_TIMING_REPORT,
-            MC_VCP_CODE_TYPE, PHYSICAL_MONITOR,
+            MC_VCP_CODE_TYPE,
         },
-        Foundation::{BOOL, HANDLE, LPARAM, PSTR, RECT},
+        Foundation::{BOOL, LPARAM, PSTR, RECT},
         Graphics::Gdi::{EnumDisplayMonitors, HDC, HMONITOR},
     },
+};
+
+pub use windows::{
+    runtime::Error as WinError,
+    Win32::{Devices::Display::PHYSICAL_MONITOR, Foundation::HANDLE},
 };
 
 // TODO: good luck getting EDID: https://social.msdn.microsoft.com/Forums/vstudio/en-US/efc46c70-7479-4d59-822b-600cb4852c4b/how-to-locate-the-edid-data-folderkey-in-the-registry-which-belongs-to-a-specific-physicalmonitor?forum=wdk
