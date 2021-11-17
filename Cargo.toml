@@ -1,6 +1,6 @@
 [package]
 name = "ddc-winapi"
-version = "0.3.1"
+version = "0.4.0"
 authors = ["arcnmx"]
 edition = "2021"
 
