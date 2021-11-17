@@ -23,7 +23,7 @@ use std::{fmt, mem, ptr};
 use ddc::{Ddc, DdcHost, FeatureCode, TimingMessage, VcpValue};
 use widestring::WideCString;
 use windows::{
-    runtime::Result as WinResult,
+    core::Result as WinResult,
     Win32::{
         Devices::Display::{
             CapabilitiesRequestAndCapabilitiesReply, DestroyPhysicalMonitor,
@@ -38,7 +38,7 @@ use windows::{
 };
 
 pub use windows::{
-    runtime::Error as WinError,
+    core::Error as WinError,
     Win32::{Devices::Display::PHYSICAL_MONITOR, Foundation::HANDLE},
 };
 
