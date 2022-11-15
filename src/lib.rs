@@ -29,7 +29,7 @@ use winapi::um::lowlevelmonitorconfigurationapi::*;
 use winapi::shared::windef::{HMONITOR, HDC, LPRECT};
 use winapi::shared::minwindef::{LPARAM, BYTE, DWORD, BOOL, TRUE};
 use winapi::um::winnt::HANDLE;
-use widestring::WideCString;
+use widestring::WideCStr;
 use ddc::{Ddc, DdcHost, FeatureCode, VcpValue, TimingMessage};
 
 // TODO: good luck getting EDID: https://social.msdn.microsoft.com/Forums/vstudio/en-US/efc46c70-7479-4d59-822b-600cb4852c4b/how-to-locate-the-edid-data-folderkey-in-the-registry-which-belongs-to-a-specific-physicalmonitor?forum=wdk
@@ -60,9 +60,15 @@ impl Monitor {
 
     /// Physical monitor description string.
     pub fn description(&self) -> String {
-        unsafe {
-            WideCString::from_ptr_str(self.monitor.szPhysicalMonitorDescription.as_ptr())
-                .to_string_lossy()
+        let str_ptr = ptr::addr_of!(self.monitor.szPhysicalMonitorDescription);
+        // TODO: Replace with is_aligned() once it's stable
+        let is_aligned = (str_ptr as usize) & (mem::align_of::<u16>() - 1) == 0;
+        if is_aligned {
+            unsafe { WideCStr::from_ptr_str(str_ptr as _) }.to_string_lossy()
+        } else {
+            let aligned = unsafe { ptr::read_unaligned(str_ptr) };
+            let wide_str = unsafe { WideCStr::from_ptr_str(aligned.as_ptr()) };
+            wide_str.to_string_lossy()
         }
     }
 
