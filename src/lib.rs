@@ -24,12 +24,13 @@ extern crate ddc;
 extern crate widestring;
 
 use std::{io, ptr, mem, fmt};
+use std::borrow::Cow;
 use winapi::um::physicalmonitorenumerationapi::*;
 use winapi::um::lowlevelmonitorconfigurationapi::*;
 use winapi::shared::windef::{HMONITOR, HDC, LPRECT};
 use winapi::shared::minwindef::{LPARAM, BYTE, DWORD, BOOL, TRUE};
 use winapi::um::winnt::HANDLE;
-use widestring::WideCString;
+use widestring::{WideCStr, WideStr};
 use ddc::{Ddc, DdcHost, FeatureCode, VcpValue, TimingMessage};
 
 // TODO: good luck getting EDID: https://social.msdn.microsoft.com/Forums/vstudio/en-US/efc46c70-7479-4d59-822b-600cb4852c4b/how-to-locate-the-edid-data-folderkey-in-the-registry-which-belongs-to-a-specific-physicalmonitor?forum=wdk
@@ -60,9 +61,14 @@ impl Monitor {
 
     /// Physical monitor description string.
     pub fn description(&self) -> String {
-        unsafe {
-            WideCString::from_ptr_str(std::ptr::addr_of!(self.monitor.szPhysicalMonitorDescription) as *const _)
-                .to_string_lossy()
+        let str_ptr = ptr::addr_of!(self.monitor.szPhysicalMonitorDescription);
+        let desc = match (str_ptr as usize) & (mem::align_of::<u16>() - 1) {
+            0 => Cow::Borrowed(unsafe { &*str_ptr }),
+            _ => Cow::Owned(self.monitor.szPhysicalMonitorDescription),
+        };
+        match WideCStr::from_slice_truncate(&desc[..]) {
+            Ok(cstr) => cstr.to_string_lossy(),
+            Err(_) => WideStr::from_slice(&desc[..]).to_string_lossy(),
         }
     }
 

@@ -31,7 +31,7 @@ maintenance = { status = "passively-maintained" }
 
 [dependencies]
 ddc = "0.2"
-widestring = "0.3"
+widestring = "1"
 
 [dependencies.winapi]
 version = "0.3"
