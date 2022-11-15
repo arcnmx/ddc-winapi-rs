@@ -18,4 +18,4 @@ maintenance = { status = "passively-maintained" }
 [dependencies]
 ddc = { version = "^0.2.0" }
 winapi = { version = "^0.3.5", features = ["windef", "minwindef", "winuser", "physicalmonitorenumerationapi", "lowlevelmonitorconfigurationapi"] }
-widestring = "^0.3.0"
+widestring = "1"
