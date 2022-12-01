@@ -64,12 +64,20 @@ impl Monitor {
         // TODO: Replace with is_aligned() once it's stable
         let is_aligned = (str_ptr as usize) & (mem::align_of::<u16>() - 1) == 0;
         if is_aligned {
-            unsafe { WideCStr::from_ptr_str(str_ptr as _) }.to_string_lossy()
+            Self::description_from_winapi_str(unsafe { &*str_ptr })
         } else {
-            let aligned = unsafe { ptr::read_unaligned(str_ptr) };
-            let wide_str = unsafe { WideCStr::from_ptr_str(aligned.as_ptr()) };
-            wide_str.to_string_lossy()
+            let aligned = self.monitor.szPhysicalMonitorDescription;
+            Self::description_from_winapi_str(&aligned)
         }
+    }
+
+    fn description_from_winapi_str(winapi_str: &[u16]) -> String {
+        // According to https://learn.microsoft.com/en-us/windows/win32/stg/coding-style-conventions
+        // the sz prefix of `szPhysicalMonitorDescription` means that it should
+        // be a Zero terminated String.
+        WideCStr::from_slice_truncate(winapi_str)
+            .expect("sz prefixed var but not null terminated?")
+            .to_string_lossy()
     }
 
     /// Physical monitor winapi handle.
