@@ -1,5 +1,5 @@
 #![deny(missing_docs)]
-#![doc(html_root_url = "http://arcnmx.github.io/ddc-winapi-rs/")]
+#![doc(html_root_url = "https://docs.rs/ddc-winapi/0.3.0/")]
 
 //! Implementation of DDC/CI traits on Windows.
 //!

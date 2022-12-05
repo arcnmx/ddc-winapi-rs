@@ -6,10 +6,18 @@ authors = ["arcnmx"]
 description = "DDC/CI monitor control on Windows"
 keywords = ["ddc", "mccs", "vcp", "vesa"]
 
-documentation = "http://arcnmx.github.io/ddc-winapi-rs/ddc_winapi"
+documentation = "https://docs.rs/ddc-winapi"
 repository = "https://github.com/arcnmx/ddc-winapi-rs"
 readme = "README.md"
 license = "MIT"
+
+[package.metadata.docs.rs]
+default-target = "x86_64-pc-windows-msvc"
+targets = [
+	"x86_64-pc-windows-msvc", "i686-pc-windows-msvc",
+	"x86_64-pc-windows-gnu", "i686-pc-windows-gnu",
+	"aarch64-pc-windows-msvc",
+]
 
 [badges]
 travis-ci = { repository = "arcnmx/ddc-winapi-rs" }
