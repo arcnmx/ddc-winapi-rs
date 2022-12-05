@@ -2,6 +2,7 @@
 name = "ddc-winapi"
 version = "0.3.0"
 authors = ["arcnmx"]
+edition = "2018"
 
 description = "DDC/CI monitor control on Windows"
 keywords = ["ddc", "mccs", "vcp", "vesa"]

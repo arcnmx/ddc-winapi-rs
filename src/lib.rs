@@ -6,8 +6,6 @@
 //! # Example
 //!
 //! ```rust,no_run
-//! extern crate ddc;
-//!
 //! # fn main() {
 //! use ddc::Ddc;
 //! use ddc_winapi::Monitor;
@@ -18,10 +16,6 @@
 //! }
 //! # }
 //! ```
-
-extern crate ddc;
-extern crate widestring;
-extern crate winapi;
 
 use {
     ddc::{Ddc, DdcHost, FeatureCode, TimingMessage, VcpValue},
@@ -60,7 +54,7 @@ impl Monitor {
                     })
                     .collect::<io::Result<Vec<_>>>()
             })
-            .map(|v| v.into_iter().flat_map(|mon| mon).collect())
+            .map(|v| v.into_iter().flatten().collect())
     }
 
     /// Physical monitor description string.

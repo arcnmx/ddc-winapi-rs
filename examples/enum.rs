@@ -1,8 +1,4 @@
-extern crate ddc;
-use ddc::Ddc;
-
-extern crate ddc_winapi;
-use ddc_winapi::Monitor;
+use {ddc::Ddc, ddc_winapi::Monitor};
 
 fn main() {
     let monitors = Monitor::enumerate().unwrap();
