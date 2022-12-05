@@ -11,6 +11,13 @@ repository = "https://github.com/arcnmx/ddc-winapi-rs"
 readme = "README.md"
 license = "MIT"
 
+include = [
+	"/src/**/*.rs",
+	"/examples/**/*.rs",
+	"/README*",
+	"/COPYING*",
+]
+
 [package.metadata.docs.rs]
 default-target = "x86_64-pc-windows-msvc"
 targets = [
@@ -20,10 +27,12 @@ targets = [
 ]
 
 [badges]
-travis-ci = { repository = "arcnmx/ddc-winapi-rs" }
 maintenance = { status = "passively-maintained" }
 
 [dependencies]
-ddc = { version = "^0.2.0" }
-winapi = { version = "^0.3.5", features = ["windef", "minwindef", "winuser", "physicalmonitorenumerationapi", "lowlevelmonitorconfigurationapi"] }
+ddc = "0.2"
 widestring = "1"
+
+[dependencies.winapi]
+version = "0.3"
+features = ["windef", "minwindef", "winuser", "physicalmonitorenumerationapi", "lowlevelmonitorconfigurationapi"]
