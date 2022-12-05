@@ -61,7 +61,7 @@ impl Monitor {
     /// Physical monitor description string.
     pub fn description(&self) -> String {
         unsafe {
-            WideCString::from_ptr_str(self.monitor.szPhysicalMonitorDescription.as_ptr())
+            WideCString::from_ptr_str(std::ptr::addr_of!(self.monitor.szPhysicalMonitorDescription) as *const _)
                 .to_string_lossy()
         }
     }
