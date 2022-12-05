@@ -2,7 +2,7 @@
 name = "ddc-winapi"
 version = "0.3.0"
 authors = ["arcnmx"]
-edition = "2018"
+edition = "2021"
 
 description = "DDC/CI monitor control on Windows"
 keywords = ["ddc", "mccs", "vcp", "vesa"]
@@ -20,6 +20,7 @@ include = [
 ]
 
 [package.metadata.docs.rs]
+features = ["doc", "win32", "win32-extras"]
 default-target = "x86_64-pc-windows-msvc"
 targets = [
 	"x86_64-pc-windows-msvc", "i686-pc-windows-msvc",
@@ -33,7 +34,33 @@ maintenance = { status = "passively-maintained" }
 [dependencies]
 ddc = { version = "0.3", git = "https://github.com/arcnmx/ddc-rs", branch = "v0.3.x" }
 widestring = "1"
+bitflags = "1"
+log = "0.4"
 
 [dependencies.windows]
 version = "0.43"
-features = ["Win32_Devices_Display", "Win32_Foundation", "Win32_Graphics_Gdi"]
+features = [
+	"Win32_Foundation",
+	"Win32_Graphics_Gdi",
+	"Win32_Devices_Display",
+	"Win32_Devices_DeviceAndDriverInstallation",
+	"Win32_Devices_Properties",
+	"Win32_System_Registry",
+	"Win32_System_Time",
+]
+
+[features]
+default = []
+
+# expose low-level windows APIs
+win32 = []
+
+# rustdoc generation (requires unstable)
+doc = []
+
+# a few extra (unnecessary) impls
+win32-extras = [
+	"windows/Win32_Security",
+	"windows/Win32_System_Com",
+	"windows/Win32_System_Ole",
+]

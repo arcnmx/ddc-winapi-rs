@@ -3,6 +3,18 @@
 version = 3
 
 [[package]]
+name = "bitflags"
+version = "1.3.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bef38d45163c2f1dde094a7dfd33ccf595c92905c8f8f4fdc18d06fb1037718a"
+
+[[package]]
+name = "cfg-if"
+version = "1.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
+
+[[package]]
 name = "ddc"
 version = "0.3.0"
 source = "git+https://github.com/arcnmx/ddc-rs?branch=v0.3.x#fbbff56372a957bed86a99cd6bc4717a7c433397"
@@ -14,9 +26,20 @@ dependencies = [
 name = "ddc-winapi"
 version = "0.3.0"
 dependencies = [
+ "bitflags",
  "ddc",
+ "log",
  "widestring",
  "windows",
+]
+
+[[package]]
+name = "log"
+version = "0.4.17"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "abb12e687cfb44aa40f41fc3978ef76448f9b6038cad6aef4259d3c095a2382e"
+dependencies = [
+ "cfg-if",
 ]
 
 [[package]]

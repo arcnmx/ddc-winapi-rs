@@ -59,7 +59,7 @@
         cargoBuildFlags = [ "--examples" ];
         buildType = "debug";
         postInstall = ''
-          install -Dt $out/bin $releaseDir/examples/enum${rust-w64.pkgs.hostPlatform.extensions.executable}
+          install -Dt $out/bin $releaseDir/examples/{enum,enum_display,enum_deviceinfo}${rust-w64.pkgs.hostPlatform.extensions.executable}
         '';
         doCheck = false;
         meta = {
