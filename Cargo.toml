@@ -31,7 +31,7 @@ targets = [
 maintenance = { status = "passively-maintained" }
 
 [dependencies]
-ddc = "0.2"
+ddc = { version = "0.3", git = "https://github.com/arcnmx/ddc-rs", branch = "v0.3.x" }
 widestring = "1"
 
 [dependencies.winapi]
