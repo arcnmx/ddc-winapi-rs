@@ -24,12 +24,13 @@ extern crate ddc;
 extern crate widestring;
 
 use std::{io, ptr, mem, fmt};
+use std::borrow::Cow;
 use winapi::um::physicalmonitorenumerationapi::*;
 use winapi::um::lowlevelmonitorconfigurationapi::*;
 use winapi::shared::windef::{HMONITOR, HDC, LPRECT};
 use winapi::shared::minwindef::{LPARAM, BYTE, DWORD, BOOL, TRUE};
 use winapi::um::winnt::HANDLE;
-use widestring::WideCStr;
+use widestring::{WideCStr, WideStr};
 use ddc::{Ddc, DdcHost, FeatureCode, VcpValue, TimingMessage};
 
 // TODO: good luck getting EDID: https://social.msdn.microsoft.com/Forums/vstudio/en-US/efc46c70-7479-4d59-822b-600cb4852c4b/how-to-locate-the-edid-data-folderkey-in-the-registry-which-belongs-to-a-specific-physicalmonitor?forum=wdk
@@ -62,22 +63,14 @@ impl Monitor {
     pub fn description(&self) -> String {
         let str_ptr = ptr::addr_of!(self.monitor.szPhysicalMonitorDescription);
         // TODO: Replace with is_aligned() once it's stable
-        let is_aligned = (str_ptr as usize) & (mem::align_of::<u16>() - 1) == 0;
-        if is_aligned {
-            Self::description_from_winapi_str(unsafe { &*str_ptr })
-        } else {
-            let aligned = self.monitor.szPhysicalMonitorDescription;
-            Self::description_from_winapi_str(&aligned)
+        let desc = match (str_ptr as usize) & (mem::align_of::<u16>() - 1) {
+            0 => Cow::Borrowed(unsafe { &*str_ptr }),
+            _ => Cow::Owned(self.monitor.szPhysicalMonitorDescription),
+        };
+        match WideCStr::from_slice_truncate(&desc[..]) {
+            Ok(cstr) => cstr.to_string_lossy(),
+            Err(_) => WideStr::from_slice(&desc[..]).to_string_lossy(),
         }
-    }
-
-    fn description_from_winapi_str(winapi_str: &[u16]) -> String {
-        // According to https://learn.microsoft.com/en-us/windows/win32/stg/coding-style-conventions
-        // the sz prefix of `szPhysicalMonitorDescription` means that it should
-        // be a Zero terminated String.
-        WideCStr::from_slice_truncate(winapi_str)
-            .expect("sz prefixed var but not null terminated?")
-            .to_string_lossy()
     }
 
     /// Physical monitor winapi handle.
