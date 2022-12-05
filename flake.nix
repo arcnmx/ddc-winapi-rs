@@ -25,10 +25,11 @@
       , pkg-config
       , enableRust ? true, cargo
       , rustTools ? [ ]
+      , nativeBuildInputs ? [ ]
       , generate
       }: mkShell {
         inherit rustTools;
-        nativeBuildInputs = [
+        nativeBuildInputs = nativeBuildInputs ++ [
           generate
         ] ++ nixlib.optional enableRust cargo;
         ${if !hostPlatform.isWindows then "CARGO_BUILD_TARGET" else null} = defaultTarget;
@@ -37,7 +38,7 @@
         inherit (rust'stable) mkShell;
         enableRust = false;
       };
-      dev = { arc'rustPlatforms'nightly, rust'distChannel, rust-w64-overlay, outputs'devShells'plain }: let
+      dev = { arc'rustPlatforms'nightly, rust'distChannel, rust-w64-overlay, outputs'devShells'plain, rust-w64 }: let
         channel = rust'distChannel {
           inherit (arc'rustPlatforms'nightly) channel date manifestPath;
           channelOverlays = [ rust-w64-overlay ];
@@ -46,6 +47,7 @@
         inherit (channel) mkShell;
         enableRust = false;
         rustTools = [ "rust-analyzer" ];
+        nativeBuildInputs = [ rust-w64.pkgs.stdenv.cc.bintools ];
       };
       default = { outputs'devShells }: outputs'devShells.plain;
     };
