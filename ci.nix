@@ -10,6 +10,7 @@ in {
     };
     tasks = {
       build.inputs = [ checks.test packages.example-enum ];
+      fmt.inputs = singleton checks.rustfmt;
     };
   };
 }
