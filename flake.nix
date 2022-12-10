@@ -52,17 +52,20 @@
       default = { outputs'devShells }: outputs'devShells.plain;
     };
     packages = {
-      example-enum = { rust-w64, outputs'checks'test, source }: rust-w64.latest.rustPlatform.buildRustPackage {
+      examples = { rust-w64, outputs'checks'test, source }: rust-w64.latest.rustPlatform.buildRustPackage {
         pname = self.lib.crate.package.name;
         inherit (self.lib.crate) version cargoLock;
         src = source;
-        cargoBuildFlags = [ "--example" "enum" ];
+        cargoBuildFlags = [ "--examples" ];
         buildType = "debug";
         postInstall = ''
           install -Dt $out/bin $releaseDir/examples/enum${rust-w64.pkgs.hostPlatform.extensions.executable}
         '';
         doCheck = false;
-        meta.name = "cargo build --example enum";
+        meta = {
+          mainProgram = "enum";
+          name = "cargo build --examples";
+        };
       };
     };
     legacyPackages = { callPackageSet }: callPackageSet {
