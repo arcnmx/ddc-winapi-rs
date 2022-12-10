@@ -68,19 +68,31 @@
     legacyPackages = { callPackageSet }: callPackageSet {
       source = { rust'builders }: rust'builders.wrapSource self.lib.crate.src;
 
+      rust-w32 = { pkgsCross'mingw32 }: import inputs.rust { inherit (pkgsCross'mingw32) pkgs; };
       rust-w64 = { pkgsCross'mingwW64 }: import inputs.rust { inherit (pkgsCross'mingwW64) pkgs; };
-      rust-w64-overlay = { rust-w64 }: let
-        target = rust-w64.lib.rustTargetEnvironment {
+      rust-w64-overlay = { rust-w64, rust-w32 }: let
+        target64 = rust-w64.lib.rustTargetEnvironment {
           inherit (rust-w64) pkgs;
           rustcFlags = [ "-L native=${rust-w64.pkgs.windows.pthreads}/lib" ];
         };
+        target32 = rust-w32.lib.rustTargetEnvironment {
+          inherit (rust-w32) pkgs;
+          rustcFlags = [ "-L native=${rust-w32.pkgs.windows.pthreads}/lib" ];
+        };
       in cself: csuper: {
-        sysroot-std = csuper.sysroot-std ++ [ cself.manifest.targets.${target.triple}.rust-std ];
+        sysroot-std = csuper.sysroot-std ++ [
+          cself.manifest.targets.${target64.triple}.rust-std
+          cself.manifest.targets.${target32.triple}.rust-std
+        ];
         cargo-cc = csuper.cargo-cc // cself.context.rlib.cargoEnv {
-          inherit target;
+          target = target32;
+        } // cself.context.rlib.cargoEnv {
+          target = target64;
         };
         rustc-cc = csuper.rustc-cc // cself.context.rlib.rustcCcEnv {
-          inherit target;
+          target = target32;
+        } // cself.context.rlib.rustcCcEnv {
+          target = target64;
         };
       };
 
@@ -114,6 +126,9 @@
         cargoTestFlags = [ "--all-targets" ];
         buildType = "debug";
         meta.name = "cargo test";
+      };
+      test32 = { outputs'checks'test, rust-w32 }: outputs'checks'test.override {
+        rust-w64 = rust-w32;
       };
     };
     lib = with nixlib; {

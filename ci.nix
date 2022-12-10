@@ -9,7 +9,7 @@ in {
       nixpkgs = "22.11";
     };
     tasks = {
-      build.inputs = [ checks.test packages.example-enum ];
+      build.inputs = [ checks.test checks.test32 packages.example-enum ];
       fmt.inputs = singleton checks.rustfmt;
     };
   };
