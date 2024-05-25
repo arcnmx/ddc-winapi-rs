@@ -77,13 +77,13 @@ impl Output {
             _lprc: *mut RECT,
             userdata: LPARAM,
         ) -> BOOL {
-            let monitors: &mut Vec<HMONITOR> = mem::transmute(userdata);
+            let monitors: &mut Vec<HMONITOR> = &mut *(userdata.0 as *mut Vec<HMONITOR>);
             monitors.push(handle);
             BOOL::from(true)
         }
 
         let mut monitors = Vec::<HMONITOR>::new();
-        let userdata = LPARAM(&mut monitors as *mut _ as _);
+        let userdata = LPARAM(ptr::addr_of_mut!(monitors) as _);
         unsafe { EnumDisplayMonitors(None, None, Some(callback), userdata) }.ok()?;
         Ok(monitors)
     }
