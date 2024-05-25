@@ -245,14 +245,14 @@ pub fn get_physical_monitors_from_hmonitor(monitor: HMONITOR) -> io::Result<Vec<
 /// Enumerates all `HMONITOR`s using the `EnumDisplayMonitors` WinAPI call.
 pub fn enumerate_monitors() -> io::Result<Vec<HMONITOR>> {
     unsafe extern "system" fn callback(monitor: HMONITOR, _hdc_monitor: HDC, _lprc: LPRECT, userdata: LPARAM) -> BOOL {
-        let monitors: &mut Vec<HMONITOR> = mem::transmute(userdata);
+        let monitors: &mut Vec<HMONITOR> = &mut *(userdata as *mut Vec<HMONITOR>);
         monitors.push(monitor);
         TRUE
     }
 
     let mut monitors = Vec::<HMONITOR>::new();
     if unsafe {
-        let userdata = &mut monitors as *mut _;
+        let userdata = ptr::addr_of_mut!(monitors);
         winapi::um::winuser::EnumDisplayMonitors(ptr::null_mut(), ptr::null(), Some(callback), userdata as _)
     } != TRUE
     {
