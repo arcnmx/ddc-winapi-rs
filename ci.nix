@@ -3,10 +3,13 @@
 in {
   config = {
     name = "ddc-winapi";
-    ci.gh-actions.enable = true;
+    ci = {
+      version = "v0.7";
+      gh-actions.enable = true;
+    };
     cache.cachix.arc.enable = true;
     channels = {
-      nixpkgs = "22.11";
+      nixpkgs = "24.05";
     };
     tasks = {
       build.inputs = [ checks.test checks.test32 packages.examples ];
