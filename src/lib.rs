@@ -204,10 +204,10 @@ impl fmt::Debug for Monitor {
 /// WinAPI `GetPhysicalMonitorsFromHMONITOR`
 pub fn get_physical_monitors_from_hmonitor(monitor: HMONITOR) -> WinResult<Vec<PHYSICAL_MONITOR>> {
     let mut len = 0;
-    BOOL(unsafe { GetNumberOfPhysicalMonitorsFromHMONITOR(monitor, &mut len) }).ok()?;
+    unsafe { GetNumberOfPhysicalMonitorsFromHMONITOR(monitor, &mut len) }?;
 
     let mut monitors = vec![PHYSICAL_MONITOR::default(); len as usize];
-    BOOL(unsafe { GetPhysicalMonitorsFromHMONITOR(monitor, &mut monitors) }).ok()?;
+    unsafe { GetPhysicalMonitorsFromHMONITOR(monitor, &mut monitors) }?;
 
     Ok(monitors)
 }
