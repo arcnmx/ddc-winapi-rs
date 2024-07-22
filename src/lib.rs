@@ -1,5 +1,5 @@
 #![deny(missing_docs)]
-#![doc(html_root_url = "https://docs.rs/ddc-winapi/0.2.1/")]
+#![doc(html_root_url = "https://docs.rs/ddc-winapi/0.2.2/")]
 
 //! Implementation of DDC/CI traits on Windows.
 //!
